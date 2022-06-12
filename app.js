@@ -4,6 +4,7 @@ import { list } from './list.js'
 import { read } from './read.js'
 import { create } from './create.js'
 import { rename } from './rename.js'
+import { copy } from './copy.js'
 
 
 
@@ -43,6 +44,9 @@ process.stdin.on('data', chunk => {
 
     } else if(/^rn\s/.test(chunk.trim())) {
         rename(getDirname, chunk)
+        
+    } else if(/^cp\s/.test(chunk.trim())) {
+        copy(getDirname, chunk)
         
     }
 })

@@ -4,7 +4,6 @@ import path from 'path';
 
 export const rename = async (dirname, input) => {
     let trimInput = input.trim();
-    let fileToCreate = trimInput.split(' ')[1];
     let oldFile = path.join(dirname, trimInput.split(' ')[1]);
     let newFile = path.join(dirname, trimInput.split(' ')[2]);
 
