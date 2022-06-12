@@ -1,4 +1,4 @@
-import { copyFile } from 'fs/promises'
+import { copyFile, unlink } from 'fs/promises'
 import path from 'path'
 
 export const copy = async (dirname, input) => {
@@ -6,7 +6,8 @@ export const copy = async (dirname, input) => {
     let file = trimInput.split(' ')[1]
     let newDirToCopy = path.resolve(dirname, trimInput.split(' ')[2]);
   try {
-    await copyFile(path.join(dirname, file), path.resolve(dirname, newDirToCopy, file))
+    await copyFile(path.join(dirname, file), path.resolve(dirname, newDirToCopy, file));
+    if(trimInput.split(' ')[0] === 'mv') await unlink(path.join(dirname, file));
     console.log( `\nYou are currently in ${dirname}` );
   } catch (e) {
     console.log('Operation failed');

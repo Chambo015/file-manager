@@ -5,6 +5,8 @@ import { read } from './read.js'
 import { create } from './create.js'
 import { rename } from './rename.js'
 import { copy } from './copy.js'
+import { remove } from './delete.js'
+import { getOSInfo } from './osInfo.js'
 
 
 
@@ -48,7 +50,16 @@ process.stdin.on('data', chunk => {
     } else if(/^cp\s/.test(chunk.trim())) {
         copy(getDirname, chunk)
         
+    } else if(/^mv\s/.test(chunk.trim())) {
+        copy(getDirname, chunk)
+        
+    } else if(/^rm\s/.test(chunk.trim())) {
+        remove(getDirname, chunk)
+        
+    } else if(/^os\s/.test(chunk.trim())) {
+        getOSInfo(chunk)
+        console.log( `\nYou are currently in ${getDirname}` );
+    } else {
+        console.log( 'Invalid input' );
     }
 })
-
-// Доделаю работу позже ....
