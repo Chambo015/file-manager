@@ -2,6 +2,7 @@ import { getDirname, upDirname, cdDirname } from './dirname.js'
 import { getUserName } from './parseUserName.js'
 import { list } from './list.js'
 import { read } from './read.js'
+import { create } from './create.js'
 
 
 
@@ -34,6 +35,10 @@ process.stdin.on('data', chunk => {
 
     } else if(/^cat\s/.test(chunk.trim())) {
         read(getDirname , chunk)
+
+    } else if(/^add\s/.test(chunk.trim())) {
+        create(getDirname, chunk)
+        
     }
 })
 
