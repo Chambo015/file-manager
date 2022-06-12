@@ -4,7 +4,7 @@ import path from 'path'
 
 export const create = async (dirname, file) => {
     let trimFile = file.trim()
-    let fileToCreate = trimFile.slice(trimFile.indexOf(' ') + 1)
+    let fileToCreate = (trimFile.split(' '))[1]
 
     try {
         await writeFile(path.join(dirname, fileToCreate), '', { flag: 'wx'})

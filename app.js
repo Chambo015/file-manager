@@ -3,6 +3,8 @@ import { getUserName } from './parseUserName.js'
 import { list } from './list.js'
 import { read } from './read.js'
 import { create } from './create.js'
+import { rename } from './rename.js'
+
 
 
 
@@ -38,6 +40,9 @@ process.stdin.on('data', chunk => {
 
     } else if(/^add\s/.test(chunk.trim())) {
         create(getDirname, chunk)
+
+    } else if(/^rn\s/.test(chunk.trim())) {
+        rename(getDirname, chunk)
         
     }
 })
