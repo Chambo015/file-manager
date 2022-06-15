@@ -1,31 +1,34 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs/promises'
+import { currentlyDir } from './main-messages.js';
+import { parseInput } from './parse-input.js';
 
-const homedir = os.homedir()
+const startHomedir = os.homedir()
+process.chdir(startHomedir)
 
-export let getDirname = homedir
-
-export const upDirname = () => {
-    getDirname = path.normalize(getDirname + '/..')
-    return getDirname
+export const upDir = () => {
+    process.chdir('../')
+    currentlyDir()
+    return process.cwd()
 }
 
-export const cdDirname = async (dir) => {
-    let trimDir = dir.trim()
-    let parseDir = trimDir.slice(trimDir.indexOf(' ') + 1)
+export const cDir = async (input) => {
+    const prePath = process.cwd()
+    const { firstArg } = parseInput(input)
     try {
-        let stat = await fs.stat(path.join(getDirname, parseDir))
+        process.chdir(firstArg)
+        let stat = await fs.stat(process.cwd())
 
         if(stat.isDirectory()) {
-            getDirname = path.join(getDirname, parseDir)
-            console.log( `\nYou are currently in ${getDirname}` );
-            return getDirname
+            currentlyDir()
+            return process.cwd()
         } else {
+            process.chdir(prePath)
             console.log('Invalid input');
         }
     } catch (e) {
+        process.chdir(prePath)
         console.log('Operation failed');
-        process.stdout.write('> ')
     }
 }

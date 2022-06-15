@@ -1,65 +1,44 @@
-import { getDirname, upDirname, cdDirname } from './dirname.js'
-import { getUserName } from './parseUserName.js'
-import { list } from './list.js'
-import { read } from './read.js'
-import { create } from './create.js'
-import { rename } from './rename.js'
-import { copy } from './copy.js'
-import { remove } from './delete.js'
-import { getOSInfo } from './osInfo.js'
+import readline from 'readline'
+
+import { upDir, cDir } from './dirname.js';
+import { getUserName , parseInput } from './parse-input.js';
+import { list } from './fs/list.js';
+import { read } from './fs/read.js';
+import { create } from './fs/create.js';
+import { rename } from './fs/rename.js';
+import { copy, move } from './fs/copy.js';
+import { remove } from './fs/delete.js';
+import { getOSInfo } from './osInfo.js';
+import { hash } from './hash.js'
+import { compress, decompress } from './zip.js'
+import { welcomeMsg, finalMsg } from './main-messages.js';
 
 
-
-
-
-
-
-console.log(`Welcome to the File Manager, %s \n`, getUserName());
-console.log( `You are currently in ${getDirname}` );
-
-
-
-process.on('SIGINT', () => {
-    process.exit()
-});
-process.on('exit', () => {
-    console.log('Thank you for using File Manager, %s', getUserName());
-});
-
-process.stdin.setEncoding('utf-8')
-process.stdin.on('data', chunk => {
-    if (chunk.trim() == 'up') {
-        upDirname()
-        console.log( `\nYou are currently in ${getDirname}` );
-
-    } else if(chunk.trim() == 'ls') {
-        list(getDirname)
-
-    } else if(/^cd\s/.test(chunk.trim())) {
-        cdDirname(chunk.trim())
-
-    } else if(/^cat\s/.test(chunk.trim())) {
-        read(getDirname , chunk)
-
-    } else if(/^add\s/.test(chunk.trim())) {
-        create(getDirname, chunk)
-
-    } else if(/^rn\s/.test(chunk.trim())) {
-        rename(getDirname, chunk)
-        
-    } else if(/^cp\s/.test(chunk.trim())) {
-        copy(getDirname, chunk)
-        
-    } else if(/^mv\s/.test(chunk.trim())) {
-        copy(getDirname, chunk)
-        
-    } else if(/^rm\s/.test(chunk.trim())) {
-        remove(getDirname, chunk)
-        
-    } else if(/^os\s/.test(chunk.trim())) {
-        getOSInfo(chunk)
-        console.log( `\nYou are currently in ${getDirname}` );
-    } else {
-        console.log( 'Invalid input' );
-    }
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
 })
+
+rl.on('close', () => {
+    finalMsg()
+})
+
+rl.on('line', (i) => {
+    if (i.trim() === '.exit') return rl.close();
+    if (i.trim() === 'up') return upDir();
+    if (i.trim() === 'ls') return list();
+    if (parseInput(i).mainCommand === 'cd') return cDir(i);
+    if (parseInput(i).mainCommand === 'cat') return read(i);
+    if (parseInput(i).mainCommand === 'add') return create(i);
+    if (parseInput(i).mainCommand === 'rn') return rename(i);
+    if (parseInput(i).mainCommand === 'cp') return copy(i);
+    if (parseInput(i).mainCommand === 'mv') return move(i);
+    if (parseInput(i).mainCommand === 'rm') return remove(i);
+    if (parseInput(i).mainCommand === 'os') return getOSInfo(i);
+    if (parseInput(i).mainCommand === 'hash') return hash(i);
+    if (parseInput(i).mainCommand === 'compress') return compress(i);
+    if (parseInput(i).mainCommand === 'decompress') return decompress(i);
+    console.log('Invalid input');
+});
+
+welcomeMsg();

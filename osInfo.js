@@ -1,19 +1,31 @@
-import os from 'os'
-
-
+import os from 'os';
+import { parseInput } from '#main/parse-input.js';
+import { currentlyDir } from '#main/main-messages.js';
 
 export const getOSInfo = (input) => {
-    let trimInput = input.trim();
-    let args = trimInput.split(' ')[1]
-    if(args === '--EOL') return console.log(os.EOL);
-    if(args === '--cpus') return console.log(os.cpus());;
-    if(args === '--homedir') return console.log(os.homedir());;
-    if(args === '--username') return console.log(os.userInfo().username);
-    if(args === '--architecture') return console.log(os.arch());
-    
-}
-    
-
-export const cdDirname = async (dir) => {
-    
-}
+  const { firstArg } = parseInput(input);
+  switch (firstArg) {
+    case '--EOL':
+      console.log(os.EOL);
+      currentlyDir();
+      break;
+    case '--cpus':
+      console.table(os.cpus());
+      currentlyDir();
+      break;
+    case '--homedir':
+      console.log(os.homedir());
+      currentlyDir();
+      break;
+    case '--username':
+      console.log(os.userInfo().username);
+      currentlyDir();
+      break;
+    case '--architecture':
+      console.log(os.arch());
+      currentlyDir();
+      break;
+    default:
+      console.log('Operation failed');
+  }
+};
